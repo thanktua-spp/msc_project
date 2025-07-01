@@ -6,11 +6,20 @@
 #@markdown Adapted from [Implicit Behavior Cloning](https://implicitbc.github.io/)
 
 import numpy as np
+import gym
 import pygame
 import pymunk
-from typing import Tuple, Sequence, Dict, Union, Optional
 from pymunk.space_debug_draw_options import SpaceDebugColor
 from pymunk.vec2d import Vec2d
+import pymunk.pygame_util
+import shapely.geometry as sg
+from gym import spaces
+import collections
+import cv2
+import skimage.transform as st
+
+from typing import Tuple, Sequence
+
 
 positive_y_is_up: bool = False
 """Make increasing values of y point upwards.
