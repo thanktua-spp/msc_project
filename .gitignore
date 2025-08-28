@@ -1,2 +1,9 @@
 .venv
-__pycache__
+**/__pycache__/
+pushT/pusht_cchi_v7_replay.zarr/
+old env/
+src/data/pusht/*
+src/saved_models/*
+src/data/outputs/*
+*.zip
+*.mp4
