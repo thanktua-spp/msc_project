@@ -1,4 +1,11 @@
 _target_: diffusion_policy.workspace.train_diffusion_unet_hybrid_workspace.TrainDiffusionUnetHybridWorkspace
+
+task_name: &task_name lift
+
+
+dataset_type: &dataset_type ph
+dataset_path: &dataset_path /home/thankgod/2025/msc_project/src/data/${task.task_name}/${task.dataset_type}/image_abs.hdf5
+
 checkpoint:
   save_last_ckpt: true
   save_last_snapshot: false
@@ -138,7 +145,7 @@ task:
   dataset:
     _target_: diffusion_policy.dataset.robomimic_replay_image_dataset.RobomimicReplayImageDataset
     abs_action: true
-    dataset_path: data/robomimic/datasets/lift/ph/image_abs.hdf5
+    dataset_path: ${dataset_path}
     horizon: 16
     n_obs_steps: 2
     pad_after: 7
@@ -171,7 +178,7 @@ task:
         robot0_gripper_qpos:
           shape:
           - 2
-    use_cache: true
+    use_cache: false
     val_ratio: 0.02
   dataset_path: data/robomimic/datasets/lift/ph/image_abs.hdf5
   dataset_type: ph
@@ -248,7 +255,6 @@ task:
         shape:
         - 2
   task_name: lift
-task_name: lift_image
 training:
   checkpoint_every: 50
   debug: false
