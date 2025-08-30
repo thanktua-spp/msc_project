@@ -26,7 +26,7 @@ shape_meta:
       shape: [3, 84, 84]
       type: rgb
     robot0_eef_pos:
-      shape: [3]  
+      shape: [3]
     robot0_eef_quat:
       shape: [4]
     robot0_eye_in_hand_image:
@@ -38,6 +38,7 @@ shape_meta:
 policy:
   _target_: diffusion_policy.policy.diffusion_unet_image_policy.DiffusionUnetImagePolicy
   cond_predict_scale: true
+  crop_shape: [76, 76]
   diffusion_step_embed_dim: 64
   down_dims: [128, 256, 512]
   #eval_fixed_crop: true
@@ -77,7 +78,6 @@ policy:
   #obs_encoder_group_norm: true
   shape_meta: ${shape_meta}
 
-
 task:
   abs_action: ${abs_action}
   dataset:
@@ -95,31 +95,10 @@ task:
     val_ratio: 0.02
   dataset_path: ${dataset_path}
   dataset_type: ph
-  
-  env_runner:
-    _target_: diffusion_policy.env_runner.robomimic_image_runner.RobomimicImageRunner
-    abs_action: ${abs_action}
-    crf: 22
-    dataset_path: ${dataset_path}
-    fps: 10
-    max_steps: 400
-    n_action_steps: 8
-    n_envs: null
-    n_obs_steps: 2
-    n_test: 10
-    n_train: 6
-    n_train_vis: 2
-    n_test_vis: 2
-    past_action: false
-    render_obs_key: agentview_image
-    shape_meta: ${shape_meta}
-    test_start_seed: 100000
-    tqdm_interval_sec: 1.0
-    train_start_idx: 0
+  env_runner: null
   name: lift_image
   shape_meta: ${shape_meta}
   task_name: ${task_name}
-
 
 dataloader:
   batch_size: 32 # try 64
@@ -135,7 +114,6 @@ val_dataloader:
   pin_memory: true
   shuffle: false
 
-
 ema:
   _target_: diffusion_policy.model.diffusion.ema_model.EMAModel
   update_after_step: 0
@@ -143,7 +121,6 @@ ema:
   power: 0.75
   min_value: 0.0
   max_value: 0.9999
-
 
 optimizer:
   _target_: torch.optim.AdamW
@@ -168,7 +145,7 @@ training:
   freeze_encoder: False
   # training loop control
   # in epochs
-  rollout_every: 2
+  rollout_every: 999999
   checkpoint_every: 2
   val_every: 1
   sample_every: 1
@@ -177,7 +154,6 @@ training:
   max_val_steps: null
   # misc
   tqdm_interval_sec: 1.0
-
 
 logging:
   project: diffusion_policy_debug
@@ -188,7 +164,6 @@ logging:
   id: null
   group: null
 
-
 checkpoint:
   save_last_ckpt: true
   save_last_snapshot: false
@@ -198,11 +173,9 @@ checkpoint:
     mode: max
     monitor_key: test_mean_score
 
-
 multi_run:
   run_dir: data/outputs/${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}
   wandb_name_base: ${now:%Y.%m.%d-%H.%M.%S}_${name}_${task_name}
-
 
 hydra:
   job:

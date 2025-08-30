@@ -1,3 +1,14 @@
+# import os
+
+# # Force usage of only GPU 0 and EGL offscreen rendering
+# os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+# os.environ['EGL_MAX_DEVICES'] = '1'
+# os.environ['MUJOCO_GL'] = 'egl'
+
+# # If you want to bypass egl_probe completely, you can also:
+# os.environ['MUJOCO_EGL_DEVICE_ID'] = '0'
+
+
 import os
 import wandb
 import numpy as np

@@ -180,13 +180,13 @@ task:
           - 2
     use_cache: false
     val_ratio: 0.02
-  dataset_path: data/robomimic/datasets/lift/ph/image_abs.hdf5
+  dataset_path:  /home/thankgod/2025/msc_project/src/data/lift/ph/image_abs.hdf5
   dataset_type: ph
   env_runner:
     _target_: diffusion_policy.env_runner.robomimic_image_runner.RobomimicImageRunner
     abs_action: true
     crf: 22
-    dataset_path: data/robomimic/datasets/lift/ph/image_abs.hdf5
+    dataset_path:  /home/thankgod/2025/msc_project/src/data/lift/ph/image_abs.hdf5
     fps: 10
     max_steps: 400
     n_action_steps: 8
