@@ -1,6 +1,11 @@
 import torch
 import torchvision
 
+def get_encoder(name, weights=None, **kwargs):
+    if name.startswith("resnet"):
+        return get_resnet(name, weights=weights, **kwargs)
+    raise ValueError(f"Unknown encoder name: {name}")
+
 def get_resnet(name, weights=None, **kwargs):
     """
     name: resnet18, resnet34, resnet50
@@ -26,3 +31,10 @@ def get_r3m(name, **kwargs):
     resnet_model = r3m_model.convnet
     resnet_model = resnet_model.to('cpu')
     return resnet_model
+
+
+if __name__ == "__main__":
+    encoder = get_encoder(
+        "resnet18",
+        weights="IMAGENET1K_V1"
+    )

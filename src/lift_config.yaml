@@ -120,6 +120,33 @@ task:
   shape_meta: ${shape_meta}
   task_name: ${task_name}
 
+training:
+  device: "cuda:0"
+  seed: 42
+  debug: False
+  resume: True
+  # optimization
+  lr_scheduler: cosine
+  lr_warmup_steps: 500
+  
+  gradient_accumulate_every: 2
+  # EMA destroys performance when used with BatchNorm
+  # replace BatchNorm with GroupNorm.
+  use_ema: True
+  freeze_encoder: False
+  
+  # training loop control
+  # in epochs
+  num_epochs: 2
+  rollout_every: 2 # keep both rollout_every checkpoint_every the same and higher
+  checkpoint_every: 2
+  val_every: 1 # keep both val_every sample_every the same
+  sample_every: 1
+  # steps per epoch
+  max_train_steps: null
+  max_val_steps: null
+  # misc
+  tqdm_interval_sec: 1.0
 
 dataloader:
   batch_size: 32 # try 64
@@ -151,33 +178,6 @@ optimizer:
   betas: [0.95, 0.999]
   eps: 1.0e-8
   weight_decay: 1.0e-6
-
-training:
-  device: "cuda:0"
-  seed: 42
-  debug: False
-  resume: True
-  # optimization
-  lr_scheduler: cosine
-  lr_warmup_steps: 500
-  num_epochs: 3
-  gradient_accumulate_every: 2
-  # EMA destroys performance when used with BatchNorm
-  # replace BatchNorm with GroupNorm.
-  use_ema: True
-  freeze_encoder: False
-  # training loop control
-  # in epochs
-  rollout_every: 2
-  checkpoint_every: 2
-  val_every: 1
-  sample_every: 1
-  # steps per epoch
-  max_train_steps: null
-  max_val_steps: null
-  # misc
-  tqdm_interval_sec: 1.0
-
 
 logging:
   project: diffusion_policy_debug

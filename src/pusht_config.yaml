@@ -18,6 +18,22 @@ past_action_visible: False
 keypoint_visible_rate: 1.0
 obs_as_global_cond: True
 
+shape_meta:
+  action:
+    shape:
+    - 2
+  obs:
+    agent_pos:
+      shape:
+      - 2
+      type: low_dim
+    image:
+      shape:
+      - 3
+      - 96
+      - 96
+      type: rgb
+
 task:
   dataset:
     _target_: diffusion_policy.dataset.pusht_image_dataset.PushTImageDataset
@@ -40,7 +56,7 @@ task:
     n_train: 6
     n_test: 50
     n_train_vis: 2
-    n_test_vis: 4
+    n_test_vis: 2
     past_action: false
     test_start_seed: 100000
     train_start_seed: 0
@@ -97,7 +113,7 @@ policy:
     rgb_model:
       _target_: diffusion_policy.model.vision.model_getter.get_resnet
       name: resnet18
-      weights: null
+      weights: r3m
     resize_shape: null
     crop_shape: [76, 76]
     # constant center crop
@@ -118,30 +134,6 @@ policy:
   n_groups: 8
   cond_predict_scale: True
   # obs_encoder_group_norm: true
-  
-
-shape_meta:
-  action:
-    shape:
-    - 2
-  obs:
-    agent_pos:
-      shape:
-      - 2
-      type: low_dim
-    image:
-      shape:
-      - 3
-      - 96
-      - 96
-      type: rgb
-
-optimizer:
-  _target_: torch.optim.AdamW
-  lr: 1.0e-4
-  betas: [0.95, 0.999]
-  eps: 1.0e-8
-  weight_decay: 1.0e-6
 
 training:
   device: "cuda:0"
@@ -151,7 +143,6 @@ training:
   # optimization
   lr_scheduler: cosine
   lr_warmup_steps: 500
-  num_epochs: 3
   gradient_accumulate_every: 2
   # EMA destroys performance when used with BatchNorm
   # replace BatchNorm with GroupNorm.
@@ -159,6 +150,7 @@ training:
   freeze_encoder: False
   # training loop control
   # in epochs
+  num_epochs: 2
   rollout_every: 2
   checkpoint_every: 2
   val_every: 1
@@ -168,6 +160,13 @@ training:
   max_val_steps: null
   # misc
   tqdm_interval_sec: 1.0
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 1.0e-4
+  betas: [0.95, 0.999]
+  eps: 1.0e-8
+  weight_decay: 1.0e-6
 
 logging:
   project: diffusion_policy_debug
