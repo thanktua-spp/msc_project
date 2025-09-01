@@ -1,8 +1,9 @@
-defaults:
-  - _self_
-  - task: pusht_image
+# defaults:
+#   - _self_
+#   - task: pusht_image
 
 name: train_diffusion_unet_image
+
 
 _target_: diffusion_policy.workspace.train_diffusion_unet_image_workspace.TrainDiffusionUnetImageWorkspace
 
@@ -42,8 +43,8 @@ task:
     pad_after: 7
     pad_before: 1
     seed: 42
-    val_ratio: 0.02
-    zarr_path: /home/thankgod/2025/msc_project/src/data/pusht/pusht_cchi_v7_replay.zarr
+    val_ratio: 0.01
+    zarr_path: ${oc.env:PWD}/data/task/pusht/pusht_cchi_v7_replay.zarr
 
   env_runner:
     _target_: diffusion_policy.env_runner.pusht_image_runner.PushTImageRunner
@@ -115,7 +116,7 @@ policy:
       _target_: diffusion_policy.model.vision.model_getter.get_rgb_model
       name: "facebook/dinov3-vits16plus-pretrain-lvd1689m"
       weights: null
-      pretrained: true
+      pretrained: false
     resize_shape: null
     crop_shape: [76, 76]
     # constant center crop
@@ -180,17 +181,19 @@ logging:
   group: null
 
 checkpoint:
+  save_last_ckpt: true
+  save_last_snapshot: false
   topk:
-    monitor_key: test_mean_score
-    mode: max
+    format_str: epoch={epoch:04d}-test_mean_score={test_mean_score:.3f}.ckpt
     k: 5
-    format_str: 'epoch={epoch:04d}-test_mean_score={test_mean_score:.3f}.ckpt'
-  save_last_ckpt: True
-  save_last_snapshot: False
+    mode: max
+    monitor_key: test_mean_score
+
 
 multi_run:
   run_dir: data/outputs/${now:%Y.%m.%d}/${now:%H.%M.%S}_${name}_${task_name}
   wandb_name_base: ${now:%Y.%m.%d-%H.%M.%S}_${name}_${task_name}
+
 
 hydra:
   job:

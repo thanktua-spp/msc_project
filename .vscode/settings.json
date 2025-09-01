@@ -1,0 +1,7 @@
+{
+    "python.defaultInterpreterPath": "/home/thankgod/conda/envs/msc_conda_env/bin/python",
+    "python.languageServer": "Pylance",
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python-envs.pythonProjects": []
+}
