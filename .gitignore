@@ -10,3 +10,4 @@ src/data/outputs/*
 *.pth
 *.ckpt
 *.hdf5
+*.pdf
