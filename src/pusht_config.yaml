@@ -78,15 +78,16 @@ ema:
   min_value: 0.0
   max_value: 0.9999
 
+# can and should increase batch size and num workers
 dataloader:
-  batch_size: 32
+  batch_size: 16
   num_workers: 4
   persistent_workers: false
   pin_memory: true
   shuffle: true
 
 val_dataloader:
-  batch_size: 32
+  batch_size: 16
   num_workers: 4
   persistent_workers: false
   pin_memory: true
@@ -111,9 +112,10 @@ policy:
     _target_: diffusion_policy.model.vision.multi_image_obs_encoder.MultiImageObsEncoder
     shape_meta: ${shape_meta}
     rgb_model:
-      _target_: diffusion_policy.model.vision.model_getter.get_resnet
-      name: resnet18
-      weights: r3m
+      _target_: diffusion_policy.model.vision.model_getter.get_rgb_model
+      name: "facebook/dinov3-vits16plus-pretrain-lvd1689m"
+      weights: null
+      pretrained: true
     resize_shape: null
     crop_shape: [76, 76]
     # constant center crop
@@ -143,7 +145,7 @@ training:
   # optimization
   lr_scheduler: cosine
   lr_warmup_steps: 500
-  gradient_accumulate_every: 2
+  gradient_accumulate_every: 4
   # EMA destroys performance when used with BatchNorm
   # replace BatchNorm with GroupNorm.
   use_ema: True

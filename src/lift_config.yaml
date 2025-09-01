@@ -61,9 +61,10 @@ policy:
     _target_: diffusion_policy.model.vision.multi_image_obs_encoder.MultiImageObsEncoder
     shape_meta: ${shape_meta}
     rgb_model:
-      _target_: diffusion_policy.model.vision.model_getter.get_resnet
-      name: resnet18
+      _target_: diffusion_policy.model.vision.model_getter.get_rgb_model
+      name: "facebook/dinov3-convnext-tiny-pretrain-lvd1689m"
       weights: null
+      pretrained: true
     resize_shape: null
     crop_shape: [76, 76]
     # constant center crop
@@ -148,6 +149,7 @@ training:
   # misc
   tqdm_interval_sec: 1.0
 
+# can and should increase batch size and num workers
 dataloader:
   batch_size: 32 # try 64
   num_workers: 4 #try 8/12

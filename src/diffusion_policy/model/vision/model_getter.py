@@ -1,11 +1,11 @@
 import torch
+import torch.nn as nn
 import torchvision
+from transformers import AutoModel, AutoConfig
 
-def get_encoder(name, weights=None, **kwargs):
-    if name.startswith("resnet"):
-        return get_resnet(name, weights=weights, **kwargs)
-    raise ValueError(f"Unknown encoder name: {name}")
-
+# ----------------------------
+# Existing resnet logic
+# ----------------------------
 def get_resnet(name, weights=None, **kwargs):
     """
     name: resnet18, resnet34, resnet50
@@ -32,9 +32,38 @@ def get_r3m(name, **kwargs):
     resnet_model = resnet_model.to('cpu')
     return resnet_model
 
+# ----------------------------
+# Hugging Face wrapper
+# ----------------------------
+class EncoderModel(nn.Module):
+    def __init__(self, checkpoint='bert-base-uncased', pretrained=True):
+        super().__init__()
+        if pretrained:
+            self.model = AutoModel.from_pretrained(
+                checkpoint,
+                device_map="cpu"
+            )
+        else:
+            config = AutoConfig.from_pretrained(checkpoint)
+            self.model = AutoModel.from_config(config)
 
-if __name__ == "__main__":
-    encoder = get_encoder(
-        "resnet18",
-        weights="IMAGENET1K_V1"
-    )
+    def forward(self, x):
+        # return pooled embedding only
+        return self.model(x).pooler_output
+
+
+# ----------------------------
+# Unified entry point
+# ----------------------------
+def get_rgb_model(name, weights=None, pretrained=True, **kwargs):
+    """
+    Entry point for encoders.
+
+    - ResNets come from torchvision / r3m
+    - Other models come from Hugging Face hub
+    """
+    if name.startswith("resnet"):
+        return get_resnet(name, weights=weights, **kwargs)
+    else:
+        # treat `name` as a Hugging Face checkpoint
+        return EncoderModel(checkpoint=name, pretrained=pretrained)

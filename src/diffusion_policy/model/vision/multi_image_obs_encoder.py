@@ -57,7 +57,7 @@ class MultiImageObsEncoder(ModuleAttrMixin):
                         assert isinstance(rgb_model, nn.Module)
                         # have a copy of the rgb model
                         this_model = copy.deepcopy(rgb_model)
-                
+
                 if this_model is not None:
                     if use_group_norm:
                         this_model = replace_submodules(
